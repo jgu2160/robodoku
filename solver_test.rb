@@ -2,12 +2,14 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'pry'
 require './solver.rb'
+require 'byebug'
 
 class SolverTest < MiniTest::Test
 
   def setup
     @solver = Solver.new
-
+    @solver.intake_board("board_2.txt")
+    @solver.spot_make
   end
 
   def test_it_exists
@@ -15,42 +17,29 @@ class SolverTest < MiniTest::Test
   end
 
   def test_it_has_a_board_instance_variable
-    assert @solver.board
+    puts @solver.board[0]
+  end
+  
+  def test_it_finds_a_coordinate
+    a = @solver.board[0][1]
+    assert_equal [0,1], @solver.location_finder(a)
   end
 
-  def test_it_provides_candidates
-    assert_equal [4,5,6,7,8,9],@solver.evaluator([1,2,3])
+  
+  def test_it_finds_the_right_square
+    square_3 = [0, 6]
+    square_5 = [3, 3]
+    square_8 = [8, 3]
+    assert_equal 3, @solver.square_finder(square_3)
+    assert_equal 5, @solver.square_finder(square_5)
+    assert_equal 8, @solver.square_finder(square_8)
   end
+end
 
-  def test_it_makes_a_column_of_3
-    skip
-    column_1 = @solver.column_maker(0)
-    assert_equal [1,4,7], column_1
+class SpotTest < MiniTest::Test
+  def test_evaluator_evaluates_arrays
+    spot = Spot.new(nil,nil)
+    assert_equal [4,5,6,7,8,9], spot.evaluator([1,2,3])
+    assert_equal [4,5,6,7,8,9], spot.candidates
   end
-
-  def test_it_makes_an_int_board
-    assert @solver.intake_board("board_1.txt")
-  end
-
-  def test_it_makes_a_column_of_9
-    @solver.intake_board("board_1.txt")
-    column_2 = @solver.column_maker(0)
-    assert_equal [8,7,3,1,9,2,5,4,6], column_2
-  end
-
-  def test_square_maker_makes_square_1
-    @solver.intake_board("board_1.txt")
-    square1 = @solver.square_maker(1)
-    assert_equal [8,2,6,7,1,5,3,9,4], square1
-  end
-
-  def test_square_maker_makes_middle_square
-    @solver.intake_board("board_1.txt")
-    square5 = @solver.square_maker(5)
-    assert_equal [4,5,9,2,6,7,8,1,3], square5
-  end
-
-
-
-
 end

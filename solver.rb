@@ -16,11 +16,10 @@ class Solver
     end
   end
 
-
-
-  def evaluator(array)
-    nine_array = (1..9).to_a
-    candidates = nine_array.reject {|x| array.include?(x)}
+  def spot_make
+    @board.each_with_index do |row, row_index|
+      row.each_with_index {|spot, column_index| row[column_index] = Spot.new([row_index, column_index], self.square_finder([row_index, column_index])) if spot == 0}
+    end
   end
 
   def column_maker(column_number)
@@ -52,12 +51,52 @@ class Solver
     end
     squared_array.flatten
   end
+  
+  def location_finder(spot)
+    column_number = nil
+    row_number = nil
+    @board.each_with_index do |row, index|
+      if row.find_index(spot)
+        column_number = row.find_index(spot)
+        row_number = index
+      end
+    end
+    return row_number, column_number
+  end
+
+  def square_finder(coordinate)
+    case coordinate[0]
+    when 0..2
+      case coordinate[1]
+        when 0..2 then 1
+        when 3..5 then 2
+        when 6..8 then 3
+      end
+    when 3..5 
+      case coordinate[1]
+        when 0..2 then 4
+        when 3..5 then 5
+        when 6..8 then 6
+      end
+    when 6..8 
+      case coordinate[1]
+        when 0..2 then 7
+        when 3..5 then 8
+        when 6..8 then 9
+      end
+    end
+  end
 end
 
 class Spot
-  def initialize
+  attr_reader :candidates
+  def initialize(coordinates,square)
+    @coordinates = coordinates
+    @square = square 
     @candidates = (1..9).to_a
   end
 
-
+  def evaluator(array)
+    @candidates = @candidates.reject {|x| array.include?(x)}
+  end
 end
