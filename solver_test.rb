@@ -17,6 +17,7 @@ class SolverTest < MiniTest::Test
   end
 
   def test_it_has_a_board_instance_variable
+    skip
     puts @solver.board[0]
   end
   
@@ -24,7 +25,6 @@ class SolverTest < MiniTest::Test
     a = @solver.board[0][1]
     assert_equal [0,1], @solver.location_finder(a)
   end
-
   
   def test_it_finds_the_right_square
     square_3 = [0, 6]
@@ -33,6 +33,12 @@ class SolverTest < MiniTest::Test
     assert_equal 3, @solver.square_finder(square_3)
     assert_equal 5, @solver.square_finder(square_5)
     assert_equal 8, @solver.square_finder(square_8)
+  end
+
+  def test_it_outputs_the_correct_square
+    puts @solver.square_make(2)    
+    puts "\n"
+    puts @solver.square_make(5)
   end
 end
 

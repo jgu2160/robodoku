@@ -1,11 +1,10 @@
-require 'pry'
-
 class Solver
 
   attr_reader :board
 
   def initialize
     @board = []
+    @solution = []
   end
 
   def intake_board(boardfile)
@@ -18,17 +17,17 @@ class Solver
 
   def spot_make
     @board.each_with_index do |row, row_index|
-      row.each_with_index {|spot, column_index| row[column_index] = Spot.new([row_index, column_index], self.square_finder([row_index, column_index])) if spot == 0}
+      row.each_with_index {|entry, column_index| row[column_index] = Spot.new([row_index, column_index], self.square_finder([row_index, column_index])) if entry == 0}
     end
   end
 
-  def column_maker(column_number)
+  def column_make(column_number)
     column_array = []
     @board.each {|row| column_array << row[column_number]}
     column_array
   end
 
-  def square_maker(square_number)
+  def square_make(square_number)
     case square_number
     when 1..3
       top_arrays = @board[0..2]
@@ -37,7 +36,7 @@ class Solver
       mid_arrays = @board[3..5]
       self.squarer(square_number, mid_arrays)
     when 7..9
-      bottom_arrays = @test_boards[6..8]
+      bottom_arrays = @board[6..8]
       self.squarer(square_number, bottom_arrays)
     end
   end
@@ -45,9 +44,9 @@ class Solver
   def squarer(square_number, array_set)
     squared_array = []
     case square_number
-    when 1..3 then array_set.each {|a| squared_array << a[0..2]}
-    when 4..6 then array_set.each {|a| squared_array << a[3..5]}
-    when 7..9 then array_set.each {|a| squared_array << a[6..8]}
+    when 1, 4, 7 then array_set.each {|a| squared_array << a[0..2]}
+    when 2, 5, 8 then array_set.each {|a| squared_array << a[3..5]}
+    when 3, 6, 9 then array_set.each {|a| squared_array << a[6..8]}
     end
     squared_array.flatten
   end
@@ -96,7 +95,7 @@ class Spot
     @candidates = (1..9).to_a
   end
 
-  def evaluator(array)
-    @candidates = @candidates.reject {|x| array.include?(x)}
+  def evaluator(chunk)
+    @candidates = @candidates.reject {|x| chunk.include?(x)}
   end
 end
