@@ -1,5 +1,4 @@
 class Solver
-
   attr_reader :board
 
   def initialize
@@ -8,11 +7,13 @@ class Solver
   end
 
   def intake_board(boardfile)
+    @board = []
     File.readlines(boardfile).each do |line|
       game_row = line.delete("\n").split("")
       game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
       @board << game_row
     end
+    self.spot_make
   end
 
   def spot_make
@@ -74,14 +75,14 @@ class Solver
     end
   end
   
-  def evaluator(spot, chunk)
+  def candidate_delete(spot, chunk)
     spot.candidates = spot.candidates.reject {|x| chunk.include?(x)}
   end
 
   def chunk_check(spot)
-    self.evaluator(spot, @board[spot.coordinates[0]])
-    self.evaluator(spot, column_make(spot.coordinates[1]))
-    self.evaluator(spot, square_make(spot.square))
+    self.candidate_delete(spot, @board[spot.coordinates[0]])
+    self.candidate_delete(spot, column_make(spot.coordinates[1]))
+    self.candidate_delete(spot, square_make(spot.square))
   end
 end
 
