@@ -9,9 +9,9 @@ class Solver
 
   def intake_board(boardfile)
     File.readlines(boardfile).each do |line|
-      var = line.delete("\n").split("")
-      var.each_with_index { |v, index| var[index] = v.to_i}
-      @board << var
+      game_row = line.delete("\n").split("")
+      game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
+      @board << game_row
     end
   end
 
@@ -51,18 +51,6 @@ class Solver
     squared_array.flatten
   end
   
-  def location_finder(spot)
-    column_number = nil
-    row_number = nil
-    @board.each_with_index do |row, index|
-      if row.find_index(spot)
-        column_number = row.find_index(spot)
-        row_number = index
-      end
-    end
-    return row_number, column_number
-  end
-
   def square_finder(coordinate)
     case coordinate[0]
     when 0..2
@@ -85,17 +73,25 @@ class Solver
       end
     end
   end
+  
+  def evaluator(spot, chunk)
+    spot.candidates = spot.candidates.reject {|x| chunk.include?(x)}
+  end
+
+  def chunk_check(spot)
+    self.evaluator(spot, @board[spot.coordinates[0]])
+    self.evaluator(spot, column_make(spot.coordinates[1]))
+    self.evaluator(spot, square_make(spot.square))
+  end
 end
 
 class Spot
-  attr_reader :candidates
+  attr_accessor :candidates
+  attr_reader :coordinates, :square
+
   def initialize(coordinates,square)
     @coordinates = coordinates
     @square = square 
     @candidates = (1..9).to_a
-  end
-
-  def evaluator(chunk)
-    @candidates = @candidates.reject {|x| chunk.include?(x)}
   end
 end

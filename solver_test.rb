@@ -21,11 +21,6 @@ class SolverTest < MiniTest::Test
     puts @solver.board[0]
   end
   
-  def test_it_finds_a_coordinate
-    a = @solver.board[0][1]
-    assert_equal [0,1], @solver.location_finder(a)
-  end
-  
   def test_it_finds_the_right_square
     square_3 = [0, 6]
     square_5 = [3, 3]
@@ -40,12 +35,10 @@ class SolverTest < MiniTest::Test
     puts "\n"
     puts @solver.square_make(5)
   end
-end
-
-class SpotTest < MiniTest::Test
+  
   def test_evaluator_evaluates_arrays
     spot = Spot.new(nil,nil)
-    assert_equal [4,5,6,7,8,9], spot.evaluator([1,2,3])
+    assert_equal [4,5,6,7,8,9], @solver.evaluator(spot,[1,2,3])
     assert_equal [4,5,6,7,8,9], spot.candidates
   end
 end
