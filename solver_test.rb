@@ -86,7 +86,7 @@ class SolverTest < MiniTest::Test
   end
   
   def test_it_solves_easy_board
-    @solver.board_intake("board_4.txt")
+    @solver.board_intake("board_6.txt")
     @solver.spot_scan
     @solver.board_clean?
   end
