@@ -12,6 +12,7 @@ class Solver
     File.readlines(boardfile).each do |line|
       game_row = line.delete("\n").split("")
       self.row_make(game_row)
+      self.row_make(game_row)
     end
     self.spot_make
   end
@@ -19,7 +20,7 @@ class Solver
   def row_make(game_row)
     game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
     @board << game_row
-  end 
+  end
 
   def spot_make
     @board.each_with_index do |row, row_index|
@@ -132,7 +133,7 @@ class Solver
   end
 
   def board_clean?
-    @board.flatten.any? {|entry| entry.is_a?(Spot)} ? true : self.board_solved? 
+    @board.flatten.any? {|entry| entry.is_a?(Spot)} ? true : self.board_solved?
   end
 
   def sudoku_solve(entry)
