@@ -11,11 +11,15 @@ class Solver
     @board = []
     File.readlines(boardfile).each do |line|
       game_row = line.delete("\n").split("")
-      game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
-      @board << game_row
+      self.row_make(game_row)
     end
     self.spot_make
   end
+
+  def row_make(game_row)
+    game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
+    @board << game_row
+  end 
 
   def spot_make
     @board.each_with_index do |row, row_index|
