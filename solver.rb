@@ -20,7 +20,9 @@ class Solver
   def row_make(game_row)
     game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
     @board << game_row
+    #testing a change
   end
+
 
   def spot_make
     @board.each_with_index do |row, row_index|
