@@ -51,43 +51,44 @@ class SolverTest < MiniTest::Test
     assert result_square[4].is_a?(Spot)
   end
 
-  def test_solver_candidate_delete_arrays
+  def test_solver_easy_candidate_delete_arrays
     spot = Spot.new(nil,nil,nil)
-    assert_equal [4,5,6,7,8,9], @solver.candidate_delete(spot,[1,2,3])
+    assert_equal [4,5,6,7,8,9], @solver.easy_candidate_delete(spot,[1,2,3])
     assert_equal [4,5,6,7,8,9], spot.candidates
   end
 
   def test_it_evaluates_a_given_spot_and_given_row
     spot = @solver.board[0][1]
-    @solver.candidate_delete(spot, @solver.board[0])
+    @solver.easy_candidate_delete(spot, @solver.board[0])
   end
 
-  def test_it_chunk_checks
+  def test_it_easy_chunk_checks
+    skip
     @solver.board_intake("board_3.txt")
     candidates_left = []
-    candidates_left << @solver.chunk_check(@solver.board[0][1])
-    candidates_left << @solver.chunk_check(@solver.board[1][4])
-    candidates_left << @solver.chunk_check(@solver.board[2][7])
-    candidates_left << @solver.chunk_check(@solver.board[3][5])
-    candidates_left << @solver.chunk_check(@solver.board[4][1])
+    candidates_left << @solver.easy_chunk_check(@solver.board[0][1])
+    candidates_left << @solver.easy_chunk_check(@solver.board[1][4])
+    candidates_left << @solver.easy_chunk_check(@solver.board[2][7])
+    candidates_left << @solver.easy_chunk_check(@solver.board[3][5])
+    candidates_left << @solver.easy_chunk_check(@solver.board[4][1])
     assert_equal [9,7,5,1,5], candidates_left.flatten
   end
 
   def test_it_removes_a_spot_correctly
     @solver.board_intake("board_3.txt")
-    @solver.chunk_check(@solver.board[0][1])
+    @solver.easy_chunk_check(@solver.board[0][1])
     assert_equal 9, @solver.spot_remove(@solver.board[0][1])
   end
 
-  def test_it_solves_Jeffs_board
-    @solver.board_intake("board_2.txt")
-    @solver.spot_scan
-    @solver.board_clean?
-  end
-  
-  def test_it_solves_easy_board
-    @solver.board_intake("board_6.txt")
-    @solver.spot_scan
-    @solver.board_clean?
-  end
+def test_it_solves_Jeffs_board
+  @solver.board_intake("board_2.txt")
+  @solver.spot_scan
+  @solver.board_clean?
+end
+
+#def test_it_solves_hard_board
+  #@solver.board_intake("board_7.txt")
+  #@solver.spot_scan
+  #@solver.board_clean?
+#end
 end

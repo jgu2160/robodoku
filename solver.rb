@@ -1,3 +1,4 @@
+require 'byebug'
 class Solver
   attr_reader :board
 
@@ -42,7 +43,6 @@ class Solver
     end
   end
 
-
   def squarer(square_number, array_set)
     squared_array = []
     case square_number
@@ -76,14 +76,23 @@ class Solver
     end
   end
 
-  def candidate_delete(spot, chunk)
+  def easy_candidate_delete(spot, chunk)
     spot.candidates = spot.candidates.reject {|x| chunk.include?(x)}
   end
 
-  def chunk_check(spot)
-    self.candidate_delete(spot, @board[spot.row_index])
-    self.candidate_delete(spot, column_make(spot.column_index))
-    self.candidate_delete(spot, square_make(spot.square))
+  def easy_chunk_check(spot)
+    self.chunk_make(spot).each {|chunk| self.easy_candidate_delete(spot, chunk)}
+  end
+
+  def chunk_make(spot)
+    [@board[spot.row_index], column_make(spot.column_index), square_make(spot.square)]
+  end
+
+  def medium_candidate_delete(spot)
+    if entry.is_a?(Spot) && entry.object_id != spot.object_id
+      other_candidates << entry.candidates
+    end
+    other_candidates.flatten.uniq
   end
 
   def candidate_alone?(spot)
@@ -94,7 +103,6 @@ class Solver
     @board[spot.row_index][spot.column_index] = spot.candidates[0]
   end
 
-
   def spot_scan
     while self.board_clean?
       @board.each do |row|
@@ -104,7 +112,7 @@ class Solver
   end
 
   def board_solved?
-      @board.flatten.reduce(:+) == 405 ? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
+    @board.flatten.reduce(:+) == 405 ? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
   end
 
   def board_clean?
@@ -112,20 +120,10 @@ class Solver
   end
 
   def sudoku_solve(entry)
-      self.chunk_check(entry)
-      self.spot_remove(entry) if candidate_alone?(entry)
+    self.easy_chunk_check(entry)
+    self.spot_remove(entry) if candidate_alone?(entry)
   end
 end
-
-
-    # chunk_check to reduce cands by row, square, column
-    # scan through spots and spot_remove
-    # somehow scan and check if cands no longer decreasing
-    # then
-    # do harder algorithm to reduce cands further
-    #  then
-    # prior algorithm
-
 
 class Spot
   attr_accessor :candidates
