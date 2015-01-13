@@ -88,11 +88,23 @@ class Solver
     [@board[spot.row_index], column_make(spot.column_index), square_make(spot.square)]
   end
 
-  def medium_candidate_delete(spot)
-    if entry.is_a?(Spot) && entry.object_id != spot.object_id
-      other_candidates << entry.candidates
+  def candidate_pool(spot, chunk)
+    other_candidate_pool = []
+    chunk.each do |entry|
+      if entry.is_a?(Spot) && entry.object_id != spot.object_id
+        other_candidate_pool << entry.candidates
+      end
     end
-    other_candidates.flatten.uniq
+    self.candidate_pool_condense(other_candidate_pool)
+    #where to do check/select method?
+  end
+
+  def candidate_select?(spot, pool)
+    1 == spot.candidates.select {|candidate| !pool.include?(candidate)}.length
+  end
+
+  def candidate_pool_condense(pool)
+    pool.flatten.uniq
   end
 
   def candidate_alone?(spot)
