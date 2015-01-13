@@ -94,18 +94,28 @@ class SolverTest < MiniTest::Test
   def test_it_selects_single_candidates
     spot_1 = Spot.new(nil,nil,nil)
     spot_1.candidates = [8,9]
-    assert @solver.candidate_select?(spot_1, [7,9]) 
+    assert @solver.candidate_single?(spot_1, [7,9]) 
   end
 
+  def test_it_transforms_a_spot
+    skip
+    spot_1 = Spot.new(nil,nil,nil)
+    spot_1.candidates = [8,9]
+    spot_2 = Spot.new(nil,nil,nil)
+    spot_2.candidates = [9]
+    spot_3 = Spot.new(nil,nil,nil)
+    spot_3.candidates = [7,9]
+    chunk_array = [1,2,3,4,5,6,(spot_3),(spot_1),(spot_2)]
+    assert_equal [8], @solver.candidate_transform_by_unique_candidate(spot_1)
+  end
+  
   def test_it_solves_Jeffs_board
     @solver.board_intake("board_2.txt")
     @solver.spot_scan
-    @solver.board_clean?
   end
 
-#def test_it_solves_hard_board
-  #@solver.board_intake("board_7.txt")
-  #@solver.spot_scan
-  #@solver.board_clean?
-#end
+def test_it_solves_hard_board
+  @solver.board_intake("board_6.txt")
+  @solver.spot_scan
+end
 end

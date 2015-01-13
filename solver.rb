@@ -12,7 +12,6 @@ class Solver
     File.readlines(boardfile).each do |line|
       game_row = line.delete("\n").split("")
       self.row_make(game_row)
-      self.row_make(game_row)
     end
     self.spot_make
   end
@@ -20,9 +19,7 @@ class Solver
   def row_make(game_row)
     game_row.each_with_index { |number_string, index| game_row[index] = number_string.to_i}
     @board << game_row
-    #testing a change
   end
-
 
   def spot_make
     @board.each_with_index do |row, row_index|
@@ -103,10 +100,19 @@ class Solver
       end
     end
     self.candidate_pool_condense(other_candidate_pool)
-    #where to do check/select method?
   end
-
-  def candidate_select?(spot, pool)
+  
+  def candidate_transform_by_unique_candidate(spot)
+    self.chunk_make(spot).each do |chunk|
+      pool = candidate_pool(spot, chunk)
+      if candidate_single?(spot, pool)
+        self.easy_candidate_delete(spot, pool)
+        self.spot_remove(spot)
+       end
+    end
+  end
+  
+  def candidate_single?(spot, pool)
     1 == spot.candidates.select {|candidate| !pool.include?(candidate)}.length
   end
 
@@ -141,6 +147,7 @@ class Solver
   def sudoku_solve(entry)
     self.easy_chunk_check(entry)
     self.spot_remove(entry) if candidate_alone?(entry)
+    self.candidate_transform_by_unique_candidate(entry)
   end
 end
 
