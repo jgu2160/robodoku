@@ -12,4 +12,5 @@ class Solver
 #solver via solver
 #better solver via medium_algo
 #best solver via swordfish
+
 end
