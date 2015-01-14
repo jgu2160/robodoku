@@ -10,10 +10,6 @@ class Solver
 
   private
 
-  def easy_candidate_delete(spot, chunk)
-    spot.candidates = spot.candidates.reject {|x| chunk.include?(x)}
-  end
-
   def board_solved?
     @board.flatten.reduce(:+) == 405 ? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
   end
@@ -29,7 +25,7 @@ class Solver
   end
 
   def easy_chunk_check(spot)
-    self.chunk_make(spot).each {|chunk| self.easy_candidate_delete(spot, chunk)}
+    self.chunk_make(spot).each {|chunk| spot.candidate_delete(chunk)}
   end
 
   def spot_remove(spot)

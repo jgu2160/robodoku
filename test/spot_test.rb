@@ -18,5 +18,20 @@ class SpotTest < MiniTest::Test
     assert_equal 9, spot.candidates.uniq.length
   end
 
+  def test_spot_has_correct_coordinates
+    spot_2 = Spot.new(0, 8, 3)
+    assert_equal 0, spot_2.row_index
+    assert_equal 8, spot_2.column_index
+    assert_equal 3, spot_2.square
+  end
+
+  def test_it_deletes_candidates_when_compared_to_chunk
+    spot.candidate_delete([1,2,3,4,5,6,7])
+    assert_equal [8,9], spot.candidates
+  end
+
+  # def test_spot_is_never_nil
+  #
+  # end
 
 end
