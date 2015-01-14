@@ -28,9 +28,7 @@ class Solver
   end
 
   def column_make(column_number)
-    column_array = []
-    @board.each {|row| column_array << row[column_number]}
-    column_array
+    @board.transpose[column_number]
   end
 
   def square_make(square_number)
@@ -81,7 +79,7 @@ class Solver
   end
 
   def easy_candidate_delete(spot, chunk)
-    spot.candidates = spot.candidates.reject {|x| chunk.include?(x)}
+    spot.candidates.reject! {|x| chunk.include?(x)}
   end
 
   def easy_chunk_check(spot)
@@ -129,7 +127,7 @@ class Solver
   end
 
   def spot_scan
-    while self.board_clean?
+    while self.board_dirty?
       @board.each do |row|
         row.each { |entry| self.sudoku_solve(entry) if entry.is_a?(Spot) }
       end
@@ -140,7 +138,7 @@ class Solver
     @board.flatten.reduce(:+) == 405 ? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
   end
 
-  def board_clean?
+  def board_dirty?
     @board.flatten.any? {|entry| entry.is_a?(Spot)} ? true : self.board_solved?
   end
 
