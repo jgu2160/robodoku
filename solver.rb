@@ -2,11 +2,6 @@ require 'byebug'
 class Solver
   attr_reader :board
 
-  def initialize
-    @board = []
-    @solution = []
-  end
-
   def board_intake(boardfile)
     @board = []
     File.readlines(boardfile).each do |line|
@@ -93,11 +88,11 @@ class Solver
   def candidate_pool(spot, chunk)
     other_candidate_pool = []
     chunk.each do |entry|
-      if entry.is_a?(Spot) && entry.object_id != spot.object_id
+      if entry.is_a?(Spot) && entry != spot
         other_candidate_pool << entry.candidates
       end
     end
-    self.candidate_pool_condense(other_candidate_pool)
+    other_candidate_pool.flatten.uniq
   end
   
   def candidate_transform_by_unique_candidate(spot)
@@ -114,10 +109,6 @@ class Solver
     1 == spot.candidates.select {|candidate| !pool.include?(candidate)}.length
   end
 
-  def candidate_pool_condense(pool)
-    pool.flatten.uniq
-  end
-
   def candidate_alone?(spot)
     spot.candidates.length == 1
   end
@@ -129,7 +120,7 @@ class Solver
   def spot_scan
     while self.board_dirty?
       @board.each do |row|
-        row.each { |entry| self.sudoku_solve(entry) if entry.is_a?(Spot) }
+        row.each { |entry| self.sudoku_solve(entry) }
       end
     end
   end
@@ -139,10 +130,11 @@ class Solver
   end
 
   def board_dirty?
-    @board.flatten.any? {|entry| entry.is_a?(Spot)} ? true : self.board_solved?
+    @board.flatten.any? {|entry| entry.is_a?(Spot)} || self.board_solved?
   end
 
   def sudoku_solve(entry)
+    return unless entry.is_a?(Spot)
     self.easy_chunk_check(entry)
     self.spot_remove(entry) if candidate_alone?(entry)
     self.candidate_transform_by_unique_candidate(entry)
