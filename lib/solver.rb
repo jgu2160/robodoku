@@ -10,6 +10,12 @@ class Solver
 
   private
 
+  def sudoku_solve(entry)
+    self.easy_chunk_check(entry)
+    self.spot_remove(entry) if candidate_alone?(entry)
+    self.candidate_transform_by_unique_candidate(entry)
+  end
+
   def board_solved?
     @board.flatten.reduce(:+) == 405 ? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
   end
@@ -18,11 +24,6 @@ class Solver
     @board.flatten.any? {|entry| entry.is_a?(Spot)} ? true : self.board_solved?
   end
 
-  def sudoku_solve(entry)
-    self.easy_chunk_check(entry)
-    self.spot_remove(entry) if candidate_alone?(entry)
-    self.candidate_transform_by_unique_candidate(entry)
-  end
 
   def easy_chunk_check(spot)
     self.chunk_make(spot).each {|chunk| spot.candidate_delete(chunk)}

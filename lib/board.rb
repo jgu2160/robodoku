@@ -1,7 +1,11 @@
-class ChunkMaker
+class Board
+  attr_reader :board
+  def initialize(board_file)
+    @board = []
+    self.board_intake(board_file)
+  end
 
   def board_intake(boardfile)
-    @board = []
     File.readlines(boardfile).each do |line|
       game_row = line.delete("\n").split("")
       self.row_make(game_row)

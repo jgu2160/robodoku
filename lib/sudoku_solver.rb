@@ -4,7 +4,7 @@ class Solver
   #divide between easy/hard solver method for speed?
 
   def initialize(boardfile)
-    @board = ChunkMaker.new.board_intake(boardfile)
+    @board = Board.new(boardfile)
     @solution = []
   end
 
