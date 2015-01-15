@@ -1,17 +1,27 @@
-# require 'minitest/autorun'
-# require 'minitest/pride'
-# require 'pry'
-# require './solver.rb'
-# require 'byebug'
-#
-# class SolverTest < MiniTest::Test
-#
-#   def setup
-#     @solver = Solver.new
-#     @solver.board_intake("board_2.txt")
-#     @solver.spot_make
-#   end
-#
+require 'minitest/autorun'
+require 'minitest/pride'
+require 'pry'
+require './lib/solver'
+require './lib/medium_solver'
+require 'byebug'
+
+class SolverTest < MiniTest::Test
+
+  def test_it_solves_Jeffs_board
+    board = Board.new("./boards/board_2.txt")
+    solver = Solver.new(board)
+    assert solver.board_solved?
+  end
+
+  def test_it_solves_hard_board
+    board = Board.new("./boards/board_6.txt")
+    solver = MediumSolver.new(board)
+    assert solver.board_solved?
+  end
+end
+
+
+
 #   def test_it_exists
 #     assert @solver
 #   end
@@ -109,13 +119,3 @@
 #     assert_equal [8], @solver.candidate_transform_by_unique_candidate(spot_1)
 #   end
 #
-#   def test_it_solves_Jeffs_board
-#     @solver.board_intake("board_2.txt")
-#     @solver.spot_scan
-#   end
-#
-# def test_it_solves_hard_board
-#   @solver.board_intake("board_6.txt")
-#   @solver.spot_scan
-# end
-# end

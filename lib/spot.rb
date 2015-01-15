@@ -2,7 +2,7 @@ class Spot
   attr_accessor :candidates
   attr_reader :row_index, :column_index, :square
 
-  def initialize(row_index=nil, column_index=nil, square=nil)
+  def initialize(row_index=nil, column_index=nil)
     @row_index = row_index
     @column_index = column_index
     @square = square

@@ -1,37 +1,49 @@
-class Solver
+require './lib/board'
 
-  def spot_scan
-    while self.board_clean?
-      @board.each do |row|
-        row.each { |entry| self.sudoku_solve(entry) if entry.is_a?(Spot) }
+class Solver
+  GOLDEN_NUMBER = 405
+
+  def initialize(board)
+    @board = board
+    self.board_solve
+  end
+
+  def board_solve
+    until self.board_clean?
+      @board.game_grid.each do |row|
+        row.each { |element| self.board_reduce(element) if element.is_a?(Spot) }
       end
     end
-  end
-
-  private
-
-  def sudoku_solve(entry)
-    self.easy_chunk_check(entry)
-    self.spot_remove(entry) if candidate_alone?(entry)
-    self.candidate_transform_by_unique_candidate(entry)
-  end
-
-  def board_solved?
-    @board.flatten.reduce(:+) == 405 ? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
+    puts @board
   end
 
   def board_clean?
-    @board.flatten.any? {|entry| entry.is_a?(Spot)} ? true : self.board_solved?
+    @board.game_grid.flatten.any? {|entry| entry.is_a?(Spot)} ? false : self.board_solved?
   end
 
 
-  def easy_chunk_check(spot)
-    self.chunk_make(spot).each {|chunk| spot.candidate_delete(chunk)}
+  def board_reduce(spot_element)
+    self.chunk_check(spot_element)
+    self.spot_replace(spot_element) if self.candidate_alone?(spot_element)
+    # self.candidate_transform_by_unique_candidate(spot_element)
+    #swordfish
   end
 
-  def spot_remove(spot)
-    @board[spot.row_index][spot.column_index] = spot.candidates[0]
+  def board_solved?
+    @board.game_grid.flatten.reduce(:+) == GOLDEN_NUMBER #? puts("Solution correct. You just got robodoku'd.") : puts("Loser.")
   end
 
+  def chunk_check(spot)
+    # byebug
+    @board.chunk_make(spot).each {|chunk| spot.candidate_delete(chunk)}
+  end
+
+  def spot_replace(spot)
+    @board.game_grid[spot.row_index][spot.column_index] = spot.candidates[0]
+  end
+
+  def candidate_alone?(spot)
+    spot.candidates.length == 1
+  end
 
 end

@@ -1,4 +1,12 @@
-class MediumAlgorithm
+require './lib/solver'
+
+class MediumSolver < Solver
+
+  def board_reduce(spot_element)
+    super
+    self.candidate_transform_by_unique_candidate(spot_element)
+    #swordfish
+  end
 
   def candidate_pool(spot, chunk)
     other_candidate_pool = []
@@ -10,17 +18,12 @@ class MediumAlgorithm
     self.candidate_pool_condense(other_candidate_pool)
   end
 
-
-
-
-
-
   def candidate_transform_by_unique_candidate(spot)
-    self.chunk_make(spot).each do |chunk|
+    @board.chunk_make(spot).each do |chunk|
       pool = candidate_pool(spot, chunk)
       if candidate_single?(spot, pool)
-        self.easy_candidate_delete(spot, pool)
-        self.spot_remove(spot)
+        spot.candidate_delete(pool)
+        self.spot_replace(spot)
       end
     end
   end
@@ -33,6 +36,4 @@ class MediumAlgorithm
     pool.flatten.uniq
   end
 
-  def candidate_alone?(spot)
-    spot.candidates.length == 1
-  end
+end
